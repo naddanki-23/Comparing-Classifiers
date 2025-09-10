@@ -78,7 +78,7 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 - Campaign: Heavily right-skewed. More calls usually lower the chance of conversion → customer fatigue.
 - Pdays: A spike at 999 (never contacted before). Smaller values (recent contact) are associated with higher conversions.
 - Previous: Most values are 0. Nonzero indicates prior engagement and slightly higher conversion.
-  <img src="images/price vs.transmission.png" width="600"/>
+  <img src="images/num_plots.png" width="700"/>
 
 #### 3. Categorical Features
 - Job: Largest groups are admin., blue-collar, technician. Students, retired, and management have higher conversion rates.
@@ -87,7 +87,7 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 - Contact Method: Cellular contacts dominate volume and convert better than telephone.
 - Month: Seasonal effects — higher campaign activity in May, but better conversion rates in March, October, and December.
 - Day of Week: Fairly uniform distribution; little impact on conversion.
-<img src="images/price vs.type.png" width="600"/>
+<img src="images/cat_plots.png" width="700"/>
 
 ---
 
@@ -102,10 +102,8 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 **Conclusion: .**
 
 
-## Key Features Impacting Used Car Price
+## Key Features 
 
-
-### Top Predictive Features effect on price: 
 
 
 ## Findings
