@@ -126,7 +126,7 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 - job_student (+0.10) → Students are more likely to subscribe.
 - default_no (+0.09) → Clients with no default history are slightly more likely to subscribe.
   
-Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 3. 
+Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 2. 
 
 ### Run 2
 <img src="images/table.png" width="850"/>
