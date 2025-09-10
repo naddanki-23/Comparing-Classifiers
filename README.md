@@ -14,9 +14,9 @@ Dataset
 - promptt.ipynb: [link to colab notebook code](https://drive.google.com/file/d/1fuCoWHbFDWMGShT5j53yzm_FiJa7bJH0/view?usp=sharing)
 
 ## Data Description 
-Feature Groups
+### Feature Groups
 
-Client Information (Demographics)
+#### Client Information (Demographics)
 - age: numeric
 - job: type of job (e.g., admin., management, student, retired)
 - marital: marital status (single, married, divorced/unknown)
@@ -25,19 +25,19 @@ Client Information (Demographics)
 - housing: has housing loan (yes, no, unknown)
 - loan: has personal loan (yes, no, unknown)
 
-Current Campaign Contact Information
+#### Current Campaign Contact Information
 - contact: type of communication (cellular, telephone)
 - month: last contact month (jan–dec)
 - day_of_week: last contact day (mon–fri)
 - duration: last contact duration in seconds (note: should be excluded for realistic modeling since it’s only known after the call)
 
-Previous Campaign Information
+#### Previous Campaign Information
 - campaign: number of contacts performed during this campaign
 - pdays: number of days since last contact from a previous campaign (999 = not previously contacted)
 - previous: number of contacts before this campaign
 - poutcome: outcome of the previous campaign (failure, nonexistent, success)
 
-Economic Indicators
+#### Economic Indicators
 - emp.var.rate: employment variation rate (quarterly indicator)
 - cons.price.idx: consumer price index (monthly indicator)
 - cons.conf.idx: consumer confidence index (monthly indicator)
@@ -95,8 +95,7 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 - Each model was evaluated using a combination of 5-fold cross-validation on the training set and hold-out testing on unseen data. Here's what the performance metrics reveal:
 
 ### Run 1
-image
-### Run 2
+
 <img src="images/table.png" width="850"/>
 
 ### Top Categorical Features 
@@ -105,15 +104,39 @@ image
 ### Top Numerical Features 
 <img src="images/corr.png" width="850"/>
 
-## Key Features:
+## Key Features in Correlation to y
 <img src="images/top_features.png" width="850"/>
-Used only the top 20 Features to cmpare the models again to see if there was any difference. 
 
-### Run 3
+### Strongest Predictors
+- nr.employed (-0.35) → Fewer employees in the economy correlates with higher likelihood of subscription.
+- pdays (-0.32) → Lower values (recent contact) predict higher success; 999 (“never contacted”) strongly predicts a “no.”
+- euribor3m (-0.31) → Lower interest rates increase chances of subscription.
+- emp.var.rate (-0.30) → Negative employment variation rate correlates with lower likelihood of subscription.
+- previous (+0.23) → More past contacts increase the chance of conversion.
+
+### Moderate Predictors
+- poutcome_success (+0.19) → If the client subscribed in a prior campaign, they’re much more likely to subscribe again.
+- poutcome_nonexistent (-0.17) → Clients with no previous campaign history are less likely to subscribe.
+- month_mar, month_oct, month_sep (+0.13–0.14) → Seasonality effect; certain months show higher campaign effectiveness.
+
+### Weaker but Useful Predictors
+- cons.price.idx (-0.14) → Higher consumer price index slightly reduces likelihood of subscription.
+- contact_telephone (-0.12) → Telephone contact (landline) predicts lower success vs. cellular.
+- month_may (-0.11) → May campaigns are less effective.
+- job_student (+0.10) → Students are more likely to subscribe.
+- default_no (+0.09) → Clients with no default history are slightly more likely to subscribe.
+  
+Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 3. 
+
+### Run 2
+<img src="images/table.png" width="850"/>
 
 ### Key Observations:
-
-**Conclusion: .**
+- Baseline Model achieved high accuracy (≈88%) by always predicting “no,” but provided zero value in identifying potential subscribers. This highlights why accuracy is misleading on imbalanced data.
+- Logistic Regression consistently emerged as the best balance of performance and practicality. With tuned parameters, it achieved strong recall (~0.63) and competitive F1 (~0.27), making it the most useful model for prioritizing likely subscribers.
+- SVM (both linear and RBF) delivered similar recall and F1 to Logistic Regression but required significantly longer training times, making it impractical at scale.
+- KNN and Decision Trees achieved deceptively high accuracy but very poor recall (~0.09–0.10), missing most potential subscribers.
+- Feature insights confirmed that prior contact history, call duration (excluded from pre-call models), campaign timing (months like March/October), and communication channel (cellular vs. telephone) were among the strongest predictors.
 
 ## Findings
 
