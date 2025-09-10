@@ -94,17 +94,26 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 ## Model Performance Summary (with Cross-Validation):
 - Each model was evaluated using a combination of 5-fold cross-validation on the training set and hold-out testing on unseen data. Here's what the performance metrics reveal:
 
+### Run 1
+image
+### Run 2
 <img src="images/table.png" width="850"/>
+
+### Top Categorical Features 
+<img src="images/top_catagorical_features.png" width="850"/>
+
+### Top Numerical Features 
+<img src="images/corr.png" width="850"/>
+
+## Key Features:
+<img src="images/top_features.png" width="850"/>
+Used only the top 20 Features to cmpare the models again to see if there was any difference. 
+
+### Run 3
 
 ### Key Observations:
 
-
 **Conclusion: .**
-
-
-## Key Features 
-
-
 
 ## Findings
 
