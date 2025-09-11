@@ -96,7 +96,7 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 
 ### Run 1
 
-<img src="images/table.png" width="850"/>
+<img src="images/run1.png" width="600"/>
 
 ### Top Categorical Features 
 <img src="images/top_catagorical_features.png" width="850"/>
@@ -129,8 +129,26 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 2. 
 
 ### Run 2
-<img src="images/table.png" width="850"/>
+<img src="images/best_estimator.png" width="650"/>
 
+Logistic Regression is the strongest candidate:
+- Excellent recall (90%) → captures most true subscribers.
+- F1 score (~0.60) → balanced precision/recall tradeoff.
+- High ROC AUC (0.94) → discriminates well between classes.
+- Fast, interpretable, practical for deployment.
+
+SVC is competitive but impractical:
+- Recall slightly higher (93.5%).
+- But lacks probability outputs (no ROC/PR AUC in your table) unless probability=True.
+- Slower and harder to interpret than Logistic.
+
+KNN trades recall for precision:
+- More precise but misses half the true subscribers. Might be useful if the bank cares about reducing false positives more than catching every subscriber.
+
+Decision Tree is middle ground:
+- Decent recall but weaker precision and ROC/PR AUC.
+
+Useful for explainability but not as strong overall.
 ### Key Observations:
 - Baseline Model achieved high accuracy (≈88%) by always predicting “no,” but provided zero value in identifying potential subscribers. This highlights why accuracy is misleading on imbalanced data.
 - Logistic Regression consistently emerged as the best balance of performance and practicality. With tuned parameters, it achieved strong recall (~0.63) and competitive F1 (~0.27), making it the most useful model for prioritizing likely subscribers.
