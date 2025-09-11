@@ -97,7 +97,12 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 ### Run 1
 
 <img src="images/run1.png" width="600"/>
-
+- Baseline: As expected, accuracy looks fine but recall, precision, and F1 are all zero → not useful.
+- Logistic Regression: Strong performer — high recall (0.88), solid ROC AUC (0.94), good PR AUC (0.58), and very fast (5s).
+- SVC (RBF): Slightly higher recall (0.92), strong ROC AUC (0.93), but takes 745 seconds → not scalable.
+- KNN: Good precision (0.61), weaker recall (0.50), high ROC AUC (0.90). Runtime is slower (50s).
+- Decision Tree: Decent recall (0.86), but weaker precision (0.38) and PR AUC (0.43) → suggests overfitting/noisy predictions.
+- 
 ### Top Categorical Features 
 <img src="images/top_catagorical_features.png" width="850"/>
 
