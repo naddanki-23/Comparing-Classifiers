@@ -94,16 +94,34 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 ## Model Performance Summary (with Cross-Validation):
 - Each model was evaluated using a combination of 5-fold cross-validation on the training set and hold-out testing on unseen data. Here's what the performance metrics reveal:
 
-### Run 1
+### Run 1: Comparing the Various models 
 
 <img src="images/run1.png" width="650"/>
 
 
-- Baseline: As expected, accuracy looks fine but recall, precision, and F1 are all zero → not useful.
-- Logistic Regression: Strong performer — high recall (0.88), solid ROC AUC (0.94), good PR AUC (0.58), and very fast (5s).
-- SVC (RBF): Slightly higher recall (0.92), strong ROC AUC (0.93), but takes 745 seconds → not scalable.
-- KNN: Good precision (0.61), weaker recall (0.50), high ROC AUC (0.90). Runtime is slower (50s).
-- Decision Tree: Decent recall (0.86), but weaker precision (0.38) and PR AUC (0.43) → suggests overfitting/noisy predictions.
+- Baseline model (most frequent class)
+- - Accuracy looks deceptively high (0.88) because the dataset is imbalanced.
+  - But Precision/Recall/F1 are all 0.0, which confirms it never predicts the minority class.
+  - ROC AUC = 0.50, PR AUC = 0.11 → random performance.
+
+- Logistic Regression / SVM
+- - Both achieve reasonable recall (~0.60) but very low precision (~0.17).
+  - F1 ~0.27 means they capture positives but misclassify many negatives.
+  - Training times are acceptable (Logistic: 9s, SVM: 183s).
+
+- KNN / Decision Tree
+- - Both have higher accuracy (~0.87) but terrible recall (<0.10).
+  - These models essentially predict negatives most of the time, leading to low F1
+
+### Run 2 with Cross Validation 
+
+<img src="images/run2.png" width="650"/>
+
+- SVC achieved the best F1 (0.24) — but is computationally heavy.
+- Logistic Regression is the practical winner — slightly worse F1 but 1000× faster.
+- Decision Tree and KNN underperform — either too low recall (Tree) or too low overall accuracy (KNN).
+- Baseline shows the importance of recall & F1 — accuracy alone would have been misleading.
+
   
 ### Top Categorical Features 
 <img src="images/top_catagorical_features.png" width="850"/>
@@ -133,36 +151,31 @@ This imbalance highlights the need to use metrics beyond accuracy (e.g., Recall,
 - job_student (+0.10) → Students are more likely to subscribe.
 - default_no (+0.09) → Clients with no default history are slightly more likely to subscribe.
   
-Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 2. 
+Use only the top 20 Features to compare the models again to see if there was any difference in the various scores in Run 3. 
 
-### Run 2
-
+### Run 3: Comparing Models with Top Features
 <img src="images/best_estimator.png" width="650"/>
 
-Logistic Regression is the strongest candidate:
-- Excellent recall (90%) → captures most true subscribers.
-- F1 score (~0.60) → balanced precision/recall tradeoff.
-- High ROC AUC (0.94) → discriminates well between classes.
-- Fast, interpretable, practical for deployment.
+- Logistic Regression (best features)
+  - F1 = 0.577, Recall = 0.88 → excellent at catching positives.
+  - ROC AUC = 0.93, PR AUC = 0.57 → strong separation and precision-recall balance.
+  -  Best model overall in this run.
 
-SVC is competitive but impractical:
-- Recall slightly higher (93.5%).
-- But lacks probability outputs (no ROC/PR AUC in your table) unless probability=True.
-- Slower and harder to interpret than Logistic.
+- SVC
+  - F1 = 0.560, Recall = 0.93 (highest recall) but lower precision (0.40).
+  - ROC AUC / PR AUC missing (NaN) → likely because the model wasn’t set with probability=True (so predict_proba is unavailable).
+  - Still competitive, but slightly behind Logistic.
 
-KNN trades recall for precision:
-- More precise but misses half the true subscribers. Might be useful if the bank cares about reducing false positives more than catching every subscriber.
+- Decision Tree
+  - F1 = 0.559, Recall = 0.83, Precision = 0.42.
+  - ROC AUC = 0.89, PR AUC = 0.47 → decent, but not as strong as Logistic.
 
-Decision Tree is middle ground:
-- Decent recall but weaker precision and ROC/PR AUC.
-
-Useful for explainability but not as strong overall.
-### Key Observations:
-- Baseline Model achieved high accuracy (≈88%) by always predicting “no,” but provided zero value in identifying potential subscribers. This highlights why accuracy is misleading on imbalanced data.
-- Logistic Regression consistently emerged as the best balance of performance and practicality. With tuned parameters, it achieved strong recall (~0.63) and competitive F1 (~0.27), making it the most useful model for prioritizing likely subscribers.
-- SVM (both linear and RBF) delivered similar recall and F1 to Logistic Regression but required significantly longer training times, making it impractical at scale.
-- KNN and Decision Trees achieved deceptively high accuracy but very poor recall (~0.09–0.10), missing most potential subscribers.
-- Feature insights confirmed that prior contact history, call duration (excluded from pre-call models), campaign timing (months like March/October), and communication channel (cellular vs. telephone) were among the strongest predictors.
+- KNN
+  - F1 = 0.556, Precision = 0.61 (highest precision), Recall = 0.51.
+  - Balanced but slightly weaker than Logistic in recall and AUC metrics.
+    
+- Baseline
+  - - Same as before: Accuracy misleadingly high (0.887) but F1 = 0.0.
 
 ## Findings
 
@@ -176,11 +189,12 @@ Useful for explainability but not as strong overall.
 - Optimize timing: Certain months (March, October, December) showed higher success rates — align resources accordingly.
 - Channel strategy: Cellular contact consistently outperformed telephone outreach — prioritize mobile campaigns.
 
-### Key Findings 
-- Baseline: High accuracy but useless (never predicts positives).
-- Logistic Regression: Best trade-off → strong recall, balanced AUCs, interpretable, efficient.
-- SVC: Competitive with Logistic Regression but impractically slow for this dataset.
-- KNN & Decision Tree: Misleadingly high accuracy but poor recall → miss most positive cases.
+### Conclusion for Model Comparasion: 
+Logistic Regression with top features is the best model overall:
+- It balances high recall (critical for identifying positive cases) with reasonable precision.
+- It achieves the strongest overall discrimination (highest AUCs).
+- It is computationally efficient, unlike SVC, which is significantly slower.
+Thus, for practical deployment, Logistic Regression with the selected top features provides the most effective and interpretable solution.
 
 
 ## Next Steps & Recommendations
